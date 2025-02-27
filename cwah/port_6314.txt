@@ -1,0 +1,60 @@
+Found path: /home/lucky/Downloads/Co-LLM-Agents/cwah/../executable/linux_exec.v2.3.0.x86_64
+Mono path[0] = '/home/lucky/Downloads/Co-LLM-Agents/cwah/../executable/linux_exec.v2.3.0_Data/Managed'
+Mono config path = '/home/lucky/Downloads/Co-LLM-Agents/cwah/../executable/linux_exec.v2.3.0_Data/MonoBleedingEdge/etc'
+Can't get home directory! 
+(Filename:  Line: 409)
+
+Unable to load player prefs
+Can't get home directory! 
+(Filename:  Line: 409)
+
+Unable to synchronize player prefs
+Initialize engine version: 2019.4.28f1 (1381962e9d08)
+[Subsystems] Discovering subsystems at path /home/lucky/Downloads/Co-LLM-Agents/cwah/../executable/linux_exec.v2.3.0_Data/UnitySubsystems
+Forcing GfxDevice: Null
+GfxDevice: creating device client; threaded=0
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+FMOD failed to initialize the output device.: "Error initializing output device. " (60) 
+(Filename:  Line: 1652)
+
+Forced to initialize FMOD to to the device driver's system output rate 48000, this may impact performance and/or give inconsistent experiences compared to selected sample rate 48000 
+(Filename:  Line: 1588)
+
+FMOD failed to initialize the output device.: "Error initializing output device. " (60) 
+(Filename:  Line: 1652)
+
+FMOD initialized on nosound output
+Begin MonoManager ReloadAssembly
+- Completed reload, in  0.030 seconds
+UnloadTime: 0.698754 ms
+Can't get home directory! 
+(Filename:  Line: 409)
+
+Unable to synchronize player prefs
+HEre 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
+HEre 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
+HEre 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
+HEre 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
+Waiting for request 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
+Received request: {"id": "1740158071.8781474", "action": "idle"} 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
+Processing 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
+Waiting for request 
+(Filename: ./Runtime/Export/Debug/Debug.bindings.h Line: 39)
+
