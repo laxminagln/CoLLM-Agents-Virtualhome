@@ -29,8 +29,10 @@ class LLM:
         self.prompt_template_path = prompt_template_path
         self.single = 'single' in self.prompt_template_path
         df = pd.read_csv(self.prompt_template_path)
+        # Default prompt template
         self.prompt_template = df['prompt'][0].replace("$AGENT_NAME$", self.agent_name)\
                                                .replace("$OPPO_NAME$", self.oppo_name)
+        # Generator prompt template for communication
         if communication:
             self.generator_prompt_template = df['prompt'][1].replace("$AGENT_NAME$", self.agent_name)\
                                                             .replace("$OPPO_NAME$", self.oppo_name)
@@ -62,8 +64,8 @@ class LLM:
             if source == 'ollama':
                 # Convert provided model id to working model id if necessary.
                 model_id = lm_id
-                if model_id == "Llama-3.2-3B":
-                    model_id = "llama3.2:3b"
+                if model_id == "meta-llama/Llama-3.2-1B":
+                    model_id = "llama3.2:1b"
                 print(f"Loading local Ollama model: {model_id}")
 
                 @backoff.on_exception(backoff.expo, Exception, max_tries=5)
@@ -267,27 +269,29 @@ class LLM:
                                            opponent_grabbed_objects, opponent_last_room, room_explored)
         action_history_desc = ", ".join(action_history[-10:] if len(action_history) > 10 else action_history)
         dialogue_history_desc = '\n'.join(dialogue_history[-3:] if len(dialogue_history) > 3 else dialogue_history)
-        prompt = self.prompt_template.replace('$GOAL$', self.goal_desc)
-        prompt = prompt.replace('$PROGRESS$', progress_desc)
-        prompt = prompt.replace('$ACTION_HISTORY$', action_history_desc)
+        # If communication is enabled, use the generator prompt template (not the default prompt) so that it is not repeated.
+        if self.communication and self.generator_prompt_template is not None:
+            prompt = self.generator_prompt_template.replace('$GOAL$', self.goal_desc)
+            prompt = prompt.replace('$PROGRESS$', progress_desc)
+            prompt = prompt.replace('$ACTION_HISTORY$', action_history_desc)
+            prompt = prompt.replace('$DIALOGUE_HISTORY$', dialogue_history_desc)
+        else:
+            prompt = self.prompt_template.replace('$GOAL$', self.goal_desc)
+            prompt = prompt.replace('$PROGRESS$', progress_desc)
+            prompt = prompt.replace('$ACTION_HISTORY$', action_history_desc)
         message = None
         if self.communication:
-            prompt = prompt.replace('$DIALOGUE_HISTORY$', dialogue_history_desc)
             if not action_history[-1].startswith('[send_message]'):
-                gen_prompt = self.generator_prompt_template.replace('$GOAL$', self.goal_desc)
-                gen_prompt = gen_prompt.replace('$PROGRESS$', progress_desc)
-                gen_prompt = gen_prompt.replace('$ACTION_HISTORY$', action_history_desc)
-                gen_prompt = gen_prompt.replace('$DIALOGUE_HISTORY$', dialogue_history_desc)
-                gen_prompt = gen_prompt + f"\n{self.agent_name}:"
-                chat_prompt = [{"role": "user", "content": gen_prompt}]
-                outputs, usage = self.generator(chat_prompt if self.chat else gen_prompt, self.sampling_params)
+                # We've already built the prompt above using generator_prompt_template.
+                chat_prompt = [{"role": "user", "content": prompt}]
+                outputs, usage = self.generator(chat_prompt if self.chat else prompt, self.sampling_params)
                 self.total_cost += usage
                 message = outputs[0]
-                info['message_generator_prompt'] = gen_prompt
+                info['message_generator_prompt'] = prompt
                 info['message_generator_outputs'] = outputs
                 info['message_generator_usage'] = usage
                 if self.debug:
-                    print(f"message_generator_prompt:\n{gen_prompt}")
+                    print(f"message_generator_prompt:\n{prompt}")
                     print(f"message_generator_outputs:\n{message}")
         available_plans, num, available_plans_list = self.get_available_plans(grabbed_objects, unchecked_containers,
                                                                                ungrabbed_objects, message, room_explored)
@@ -338,4 +342,3 @@ class LLM:
                      "plan": plan,
                      "total_cost": self.total_cost})
         return plan, info
-
