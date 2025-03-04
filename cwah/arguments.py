@@ -129,7 +129,7 @@ def get_args():
     parser.add_argument('--source', default='ollama',
         choices=['huggingface', 'openai', 'debug', 'ollama'],
         help='openai API or load huggingface models')
-    parser.add_argument('--lm_id', default='facebook/opt-13b',
+    parser.add_argument('--lm_id', default='llama3.2:3b',
                         help='name for openai engine or huggingface model name/path')
     parser.add_argument('--prompt_template_path', default='LLM/prompt_nocom.csv',
                         help='path to prompt template file')
